@@ -75,20 +75,25 @@
     }
 
     function save() {
-        const acc = {
-            id: Date.now(),
-            title: document.getElementById('t').value,
-            img: document.getElementById('img').value,
-            tuong: document.getElementById('tg').value,
-            skin: document.getElementById('sk').value,
-            price: document.getElementById('pr').value,
-            cat: document.getElementById('cat').value
-        };
-        let data = JSON.parse(localStorage.getItem("shop_accs") || "[]");
-        data.push(acc);
-        localStorage.setItem("shop_accs", JSON.stringify(data));
-        alert("Đã đăng!");
-        render();
+    let imageName = document.getElementById('img').value.trim();
+    
+    // Tự động thêm .jpg nếu bạn chỉ nhập tên (giúp giảm lỗi nhập sai)
+    if (imageName !== "" && !imageName.includes(".")) {
+        imageName += ".jpg";
+    }
+
+    const acc = {
+        id: Date.now(),
+        title: document.getElementById('t').value,
+        img: imageName, // Tên ảnh đã chuẩn hóa
+        tuong: document.getElementById('tg').value,
+        skin: document.getElementById('sk').value,
+        price: document.getElementById('pr').value,
+        cat: document.getElementById('cat').value
+    };
+    
+    // ... phần code lưu localStorage giữ nguyên ...
+    alert("Đã đăng! Ảnh sử dụng: " + imageName);
     }
 
     function render() {

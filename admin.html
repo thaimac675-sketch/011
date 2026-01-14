@@ -183,3 +183,36 @@
     // Gọi hàm này trong window.onload của Admin
     showCardsAdmin();
 </script>
+<div class="box" style="margin-top:20px; grid-column: span 2;">
+    <h2>👥 QUẢN LÝ TÀI KHOẢN KHÁCH</h2>
+    <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+            <tr style="background:#eee;">
+                <th style="padding:10px; border:1px solid #ddd;">Tài khoản</th>
+                <th style="padding:10px; border:1px solid #ddd;">Mật khẩu</th>
+                <th style="padding:10px; border:1px solid #ddd;">Số dư</th>
+                <th style="padding:10px; border:1px solid #ddd;">Ngày tạo</th>
+            </tr>
+        </thead>
+        <tbody id="user-list-admin"></tbody>
+    </table>
+</div>
+
+<script>
+    function showUsersAdmin() {
+        const users = JSON.parse(localStorage.getItem("all_users") || "[]");
+        const container = document.getElementById("user-list-admin");
+        container.innerHTML = "";
+        users.reverse().forEach(u => {
+            const bal = localStorage.getItem("balance_" + u.username) || "0";
+            container.innerHTML += `
+                <tr>
+                    <td style="padding:8px; border:1px solid #ddd;">${u.username}</td>
+                    <td style="padding:8px; border:1px solid #ddd;">${u.password}</td>
+                    <td style="padding:8px; border:1px solid #ddd; color:green; font-weight:bold;">${parseInt(bal).toLocaleString()}đ</td>
+                    <td style="padding:8px; border:1px solid #ddd; color:#666;">${u.date}</td>
+                </tr>`;
+        });
+    }
+    // Gọi showUsersAdmin() trong window.onload của admin
+</script>

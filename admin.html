@@ -2,117 +2,70 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel - THAIPP</title>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+    <title>Admin Quản Lý - SHOP THAIPP</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: sans-serif; background: #f1f5f9; padding: 20px; }
-        .admin-container { max-width: 1000px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { color: #e11d48; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-top: 0; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; width: 100%; margin-top: 10px; }
-        .btn-blue { background: #2563eb; }
-        .btn-green { background: #16a34a; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
+        .admin-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 13px; }
+        input, select { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-action { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; }
+        .search-admin { border: 2px solid #e11d48 !important; }
     </style>
 </head>
 <body>
+<div style="max-width: 900px; margin: auto; padding: 10px;">
+    <h2 style="color:#e11d48; text-align: center;">💎 HỆ THỐNG QUẢN TRỊ SHOP THAIPP</h2>
 
-<div class="admin-container">
-    <div class="box">
-        <h2>📦 ĐĂNG ACC MỚI</h2>
-        <input type="text" id="t" placeholder="Tiêu đề (Vd: Acc Trắng Thông Tin)">
-        <input type="text" id="img" placeholder="Tên ảnh (Vd: nakroth.jpg)">
-        <input type="number" id="tg" placeholder="Số tướng">
-        <input type="number" id="sk" placeholder="Số trang phục">
-        <input type="number" id="pr" placeholder="Giá bán (Vd: 500000)">
-        <select id="cat">
-            <option value="50">Dưới 50k</option>
-            <option value="150">Dưới 150k</option>
-            <option value="500">Dưới 500k</option>
-            <option value="2000">Dưới 2M</option>
-        </select>
-        <input type="text" id="tk_acc" placeholder="Tài khoản đăng nhập game">
-        <input type="text" id="mk_acc" placeholder="Mật khẩu đăng nhập game">
-        <button class="btn-blue" onclick="saveAcc()">ĐĂNG LÊN SHOP</button>
+    <div class="admin-box" style="border-top: 5px solid #16a34a;">
+        <h3 style="color:#16a34a;">💰 CỘNG TIỀN THỦ CÔNG (ATM/MOMO)</h3>
+        <input type="text" id="add_user" placeholder="Nhập chính xác tên tài khoản khách (Vd: thai123)">
+        <input type="number" id="add_amount" placeholder="Nhập số tiền cần cộng (Vd: 100000)">
+        <button onclick="addMoneyManual()" class="btn-action" style="background:#16a34a;">XÁC NHẬN CỘNG TIỀN</button>
     </div>
-    <div class="box">
-    <h2>📋 DUYỆT THẺ CÀO</h2>
-    <div id="admin-card-list">Đang tải danh sách thẻ...</div>
-</div>
 
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
-<script src="script.js"></script>
+    <div class="admin-box" style="border-top: 5px solid blue;">
+        <h3 style="color:blue;">➕ ĐĂNG BÁN ACC MỚI</h3>
+        <input type="text" id="t" placeholder="Tiêu đề Acc">
+        <input type="text" id="img" placeholder="Link ảnh Acc">
+        <input type="number" id="pr" placeholder="Giá tiền bán">
+        <select id="cat">
+            <option value="2000">Acc Liên Quân Dưới 2M</option>
+            <option value="500">Acc Liên Quân Dưới 500k</option>
+            <option value="250">Acc Liên Quân Dưới 250k</option>
+            <option value="150">Acc Liên Quân Dưới 150k</option>
+        </select>
+        <input type="text" id="tk_acc" placeholder="Tài khoản Game">
+        <input type="text" id="mk_acc" placeholder="Mật khẩu Game">
+        <button onclick="adminSaveAcc()" class="btn-action" style="background:blue;">ĐĂNG ACC LÊN SHOP</button>
+    </div>
 
-    <div class="box">
-        <h2>💰 CỘNG TIỀN USER</h2>
-        <input type="text" id="user_target" placeholder="Tên tài khoản khách">
-        <input type="number" id="amount" placeholder="Số tiền cộng">
-        <button class="btn-green" onclick="addMoney()">XÁC NHẬN CỘNG TIỀN</button>
-        
-        <h2 style="margin-top:20px;">👥 DANH SÁCH USER</h2>
-        <div style="max-height: 250px; overflow-y: auto;">
+    <div class="admin-box">
+        <h3>📋 DUYỆT THẺ CÀO CHỜ</h3>
+        <div id="admin-card-list">Đang kiểm tra thẻ từ khách...</div>
+    </div>
+
+    <div class="admin-box">
+        <h3>🔍 TÌM KIẾM & KIỂM TRA TÀI KHOẢN</h3>
+        <input type="text" id="adminSearchInput" class="search-admin" placeholder="Gõ tên tài khoản game để tìm nhanh..." onkeyup="searchAdmin()">
+        <div style="overflow-x:auto;">
             <table>
-                <thead><tr><th>Tên User</th><th>Tiền</th><th>Xóa</th></tr></thead>
-                <tbody id="user-list"></tbody>
+                <thead>
+                    <tr>
+                        <th>Tài khoản</th>
+                        <th>Giá</th>
+                        <th>Danh mục</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-acc-list"></tbody>
             </table>
         </div>
     </div>
 </div>
 
-<script>
-    // --- ĐÃ CẬP NHẬT CONFIG TỪ VIDEO CỦA BẠN ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyC75Af-i4AXLH6X...", 
-        authDomain: "shopthai-ea4c1.firebaseapp.com",
-        databaseURL: "https://shopthai-ea4c1-default-rtdb.firebaseio.com",
-        projectId: "shopthai-ea4c1",
-        storageBucket: "shopthai-ea4c1.appspot.com",
-        messagingSenderId: "114276793671",
-        appId: "1:114276793671:web:0b257c70c675ef715f7d23"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function saveAcc() {
-        const id = Date.now();
-        const data = {
-            id: id, title: document.getElementById('t').value,
-            img: document.getElementById('img').value,
-            tuong: document.getElementById('tg').value, skin: document.getElementById('sk').value,
-            price: document.getElementById('pr').value, cat: document.getElementById('cat').value,
-            tk: document.getElementById('tk_acc').value, mk: document.getElementById('mk_acc').value
-        };
-        db.ref('shop_accs/' + id).set(data).then(() => { alert("Đã đăng thành công!"); location.reload(); });
-    }
-
-    function addMoney() {
-        const u = document.getElementById('user_target').value.trim();
-        const m = parseInt(document.getElementById('amount').value);
-        if(!u || isNaN(m)) return alert("Nhập đủ thông tin!");
-        db.ref('users/' + u + '/balance').transaction(c => (c || 0) + m);
-        alert("Đã cộng tiền cho " + u);
-    }
-
-    db.ref('users').on('value', (snapshot) => {
-        const users = snapshot.val();
-        const container = document.getElementById("user-list");
-        container.innerHTML = "";
-        for(let name in users) {
-            container.innerHTML += `<tr>
-                <td>${name}</td>
-                <td style="color:green; font-weight:bold;">${(users[name].balance || 0).toLocaleString()}đ</td>
-                <td><button style="background:red; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;" onclick="deleteUser('${name}')">Xóa</button></td>
-            </tr>`;
-        }
-    });
-
-    function deleteUser(name) {
-        if(confirm("Xóa user " + name + "?")) db.ref('users/' + name).remove();
-    }
-</script>
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
